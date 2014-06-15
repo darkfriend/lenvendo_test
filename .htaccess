@@ -1,0 +1,16 @@
+AddDefaultCharset UTF-8
+
+Options -Indexes
+
+RewriteEngine On
+#RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule .* index.php [L]
+RewriteRule !\.(js|gif|png|jpg|css)$ index.php
+#RewriteRule ^(.*[^/])$ $1/ [L]
+
+#RewriteBase /
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_URI} !(.*)/$
+#RewriteRule ^(.*[^/])$ $1/ [L,R=301]
