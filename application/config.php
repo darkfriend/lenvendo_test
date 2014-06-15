@@ -6,4 +6,4 @@ define('DEFAULT_ACTION', 'action_index'); #имя действия
 define('DEFAULT_TEMPLATE', 'template_view.php'); #основной шаблон
 define('DB_NAME', ''); #имя БД
 define('DB_USER', ''); #логин пользователя
-define('USER_PASSWORD', ''); #пароль пользователя
+define('DB_USER_PASSWORD', ''); #пароль пользователя

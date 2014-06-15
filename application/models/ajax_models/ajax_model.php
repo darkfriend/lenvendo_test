@@ -1,10 +1,9 @@
 <?php
-
 /**
- * Description of ajax_view
+ * Description of ajax_model
  *
  * @author Виктор
  */
-class ajax_view {
+class ajax_model extends model {
     //put your code here
 }
