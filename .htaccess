@@ -3,7 +3,6 @@ Options -Indexes
 AddType application/x-httpd-php .html 
 
 <IfModule mod_rewrite.c>
-
 RewriteEngine On
 #RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -12,7 +12,9 @@ class Route{
     protected $_controller = DEFAULT_CONTROLLER,
             $_action = DEFAULT_ACTION,
             $_params,
+            $_paramLength,
             $_model,
+            $is_404,
             $_body;
     static $_instance;
 
@@ -50,6 +52,7 @@ class Route{
             }
             //сливаю массивы в key->values
             $this->_params = array_combine($keys, $values);
+            $this->_paramLength = count($this->_params);
         }
     }
 
@@ -112,7 +115,13 @@ class Route{
                     $method = $rc->getMethod($this->getAction());
                     //echo $method.'<br>';
                     //echo $controller;
+                    //var_dump($controller);
+                    if( $controller->paramControllerLength < $controller->paramLength ){
+                        throw new Exception('404!');
+                    }
+                    
                     $method->invoke($controller);
+                    
                 } else {
                     throw new Exception('No action!');
                 }
@@ -150,6 +159,10 @@ class Route{
             // добавляю исключение
             throw new Exception('No action!');
         }*/
+    }
+    
+    function getLengthParam(){
+        return $this->_paramLength;
     }
     
     function getParams(){
