@@ -25,7 +25,7 @@ class Route{
     }
     
     private function __construct() {
-        
+        userExeption::startException();
         //$this->_controller = DEFAULT_CONTROLLER;
         #echo $this->_controller;
         $routes = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
@@ -50,8 +50,15 @@ class Route{
                     $values[]=$routes[$i];
                 }
             }
-            //сливаю массивы в key->values
-            $this->_params = array_combine($keys, $values);
+            
+            //проверяю на соответствие key->values
+            if(count($keys)==count($values)){
+                //сливаю массивы в key->values
+                $this->_params = array_combine($keys, $values);
+            } else {
+                $this->_controller = 404;
+            }
+            
             $this->_paramLength = count($this->_params);
         }
     }
@@ -199,7 +206,6 @@ class Route{
 }
 
 class userExeption{
-    
     public function startException($myExep=true){
         if($myExep) set_exception_handler('userExeption::setException');
     }
