@@ -1,15 +1,17 @@
 AddDefaultCharset UTF-8
-
 Options -Indexes
+AddType application/x-httpd-php .html 
+
+<IfModule mod_rewrite.c>
 
 RewriteEngine On
 #RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 #RewriteRule .* index.php [L]
-RewriteRule !\.(js|gif|png|jpg|css)$ index.php
+RewriteRule !\.(js|gif|png|jpg|css)$ index.php [L]
 #RewriteRule ^(.*[^/])$ $1/ [L]
-
+</IfModule>
 #RewriteBase /
 #RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_URI} !(.*)/$

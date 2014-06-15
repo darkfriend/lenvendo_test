@@ -2,7 +2,8 @@
 <?
 /**
  * 
- * fast url rewrite php class
+ * Класс простой маршрутизации
+ * Изобретение велосипеда
  * @author darkfriend
  * 
  */
@@ -16,24 +17,46 @@ class Route{
     static $_instance;
 
     public static function getInstance(){
-        if(!(self::getInstance() instanceof self))
-            self::$_instance = new self;
+        if(!(self::$_instance instanceOf self))
+            self::$_instance = new self();
         return self::$_instance;
     }
     
-//    function __construct() {
-//        
-//        //$this->_controller = DEFAULT_CONTROLLER;
-//        echo $this->_controller;
-//    }
-    
-    static function getErrorPage(){
-        $this->ErrorPage404();
+    private function __construct() {
+        
+        //$this->_controller = DEFAULT_CONTROLLER;
+        #echo $this->_controller;
+        $routes = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
+        
+        // получаю имя контроллера
+        if ( !empty($routes[0]) ){
+            $this->_controller = 'controller_'.$routes[0];
+        }
+        
+        // получаю имя экшена
+        if ( !empty($routes[1]) ){
+            $this->_action = 'action_'.$routes[1];
+        }
+        
+        //получаю параметры
+        if(!empty($routes[2])){
+            $keys = $values = array();
+            for($i=2, $cnt=count($routes); $i<$cnt; $i++ ){
+                if(!($i%2)){
+                    $keys[]=$routes[$i];
+                } else {
+                    $values[]=$routes[$i];
+                }
+            }
+            //сливаю массивы в key->values
+            $this->_params = array_combine($keys, $values);
+        }
     }
 
-    static function start($controller_name = 'main', $action_name = 'index'){
+    public function start(){
         // контроллер и действие по умолчанию
-        $controller_name = 'main';
+        
+        /*$controller_name = 'main';
         $action_name = 'index';
         //echo $this->controller_name;
         #Объявляю свой обработчик ошибок
@@ -76,9 +99,31 @@ class Route{
                 // добавляю исключение
                 throw new Exception('No model!');
             }
+        }*/
+        
+        #Объявляю свой обработчик ошибок
+        userExeption::startException();
+        //echo $this->getController();
+        if(class_exists($this->getController())){
+            $rc = new ReflectionClass($this->getController());
+            //if($rc->implementsInterface('IController')){
+                if($rc->hasMethod($this->getAction())){
+                    $controller = $rc->newInstance();
+                    $method = $rc->getMethod($this->getAction());
+                    //echo $method.'<br>';
+                    //echo $controller;
+                    $method->invoke($controller);
+                } else {
+                    throw new Exception('No action!');
+                }
+            //} else {
+            //    throw new Exception('No interface!');
+            //}
+        } else {
+            throw new Exception('No controller!');
         }
         
-        // добавляю префиксы к остальным
+        /*// добавляю префиксы к остальным
         #$model_name = 'model_'.$controller_name;
         $controller_name = 'controller_'.$controller_name;
         $action_name = 'action_'.$action_name;
@@ -104,7 +149,27 @@ class Route{
         } else {
             // добавляю исключение
             throw new Exception('No action!');
-        }
+        }*/
+    }
+    
+    function getParams(){
+        return $this->_params;
+    }
+    
+    function getController(){
+        return $this->_controller;
+    }
+    
+    function getAction(){
+        return $this->_action;
+    }
+    
+    function getBody(){
+        return $this->_body;
+    }
+    
+    function setBody($newBody){
+        $this->_body = $newBody;
     }
     
     public function ErrorPage404(){

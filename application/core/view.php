@@ -3,7 +3,9 @@
 class view{
     #public $template_view;
     
-    public function generate($content_view, $template_view = 'template_view.php', $data = null){
+    public function render($content_view, $template_view = DEFAULT_TEMPLATE, $data = null){
+        //ob_start();
         include '/application/views/'.$template_view;
+        //return ob_get_clean();
     }
 }
