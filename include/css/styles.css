@@ -1,0 +1,11 @@
+#mark_color > a{
+    text-indent: -999em;
+    min-width: 50px;
+}
+.color-white, .color-white:hover, .color-white:active{
+    color: #fff;
+    box-shadow: none;
+}
+.btn .ml5{
+    margin-left: 5px;
+}
