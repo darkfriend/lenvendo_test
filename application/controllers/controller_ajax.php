@@ -13,7 +13,7 @@ class controller_main extends controller {
         //echo $name;
         $this->view->render('ajax/ajax_view.php', 'ajax/ajax_temp.php' , $name);
     }
-    public function action_ajax(){
-        include 'ajax/';
-    }
+//    public function action_ajax(){
+//        include 'ajax/';
+//    }
 }

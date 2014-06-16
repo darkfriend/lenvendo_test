@@ -25,7 +25,10 @@ class Route{
     }
     
     private function __construct() {
-        $routes = explode('/', trim($_SERVER['REQUEST_URI'],'/'));
+        #убираю GET-данные
+        $routes= str_replace('?'.$_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+        #вырезаю и разделяю
+        $routes = explode('/', trim($routes,'/'));
         
         // получаю имя контроллера
         if ( !empty($routes[0]) ){
