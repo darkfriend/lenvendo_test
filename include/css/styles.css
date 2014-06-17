@@ -9,3 +9,6 @@
 .btn .ml5{
     margin-left: 5px;
 }
+#main_menu.navbar{
+    min-height: initial;
+}

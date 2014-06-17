@@ -10,6 +10,6 @@ class controller_main extends controller {
         $params = $this->params;
         $name = $params['name'];
         //echo $name;
-        $this->view->render('main_view.php', DEFAULT_TEMPLATE , $name);
+        $this->view->render('main_view.php', EX_TEMPLATE , $name);
     }
 }

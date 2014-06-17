@@ -44,10 +44,19 @@
             </div>
         </div>
         <div>
-            <nav class="nav navbar">
-                <a href="#" class="">Все рисунку</a>
-                <a href="#" class="">Мои рисунки</a>
-                <a href="#" class="">Мой профиль</a>
+            <nav id="main_menu" class="nav navbar navbar-default" role="navigation">
+                
+                    <li class="pull-left">
+                        <a href="#" class="">Все рисунку</a>
+                    </li>
+                    <li class="pull-left">
+                        <a href="#" class="">Мои рисунки</a>
+                    </li>
+                    <li class="pull-left">
+                        <a href="#" class="">Мой профиль</a>
+                    </li>
+                
+                
             </nav>
         </div>
     </header>
