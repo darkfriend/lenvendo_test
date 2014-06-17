@@ -12,6 +12,22 @@
         <!--[if IE]><script type="text/javascript" src="/include/js/excanvas.js"></script><![endif]-->
     </head>
     <body>
+    <?php
+    if (!empty($_POST['data'])){
+        $data = filter_input(INPUT_POST, 'data', FILTER_SANITIZE_URL);
+        $name = md5($data);
+        $file = "/$name.png";
+        if (!file_exists($file)){
+            $image = str_replace(" ", "+", $data);
+            $image = substr($image, strpos($image, ","));
+            file_put_contents(PATH_TO_SAVE_IMG.$file, base64_decode($image));
+            $parentImgID = filter_input(INPUT_POST, 'imgid', FILTER_SANITIZE_NUMBER_INT);
+        }
+        echo $file."<br>";
+        echo $parentImgID;
+        die();
+    }
+    ?>
     <header class="container panel panel-default">
         <div class="row">
             <div class="pull-left">
@@ -37,11 +53,3 @@
     </header>
     <main class="container">
         <section class="row">
-            <? include $content_view; ?>
-        </section>
-    </main>
-    <footer>
-        <script type="text/javascript" src="/include/js/main.js"></script>
-    </footer>
-    </body>
-</html>

@@ -123,12 +123,16 @@ class Route{
 }
 
 class userExeption{
-    public function startException($myExep=true){
-        if($myExep) set_exception_handler('userExeption::setException');
+    public function startException($myExep=true, $funcName = 'setException'){
+        if($myExep) set_exception_handler('userExeption::'.$funcName);
     }
     static function setException($exception){
         error_log($exception->getMessage(), 0);
         Route::ErrorPage404();
         #echo "<strong>Exception:</strong> " , $exception->getMessage();
+    }
+    static function setErrorException($exception){
+        $_POST['errorExceptionValue'] = $exception->getMessage();
+        error_log($exception->getMessage(), 0);
     }
 }

@@ -31,7 +31,11 @@ class controller{
         include $module_path;
         
         $classModel = $moduleName.'_model';
-        $this->setModel( new $classModel() );
+        //return new $classModel();
+        //new install_model()->start_module();
+        $this->setModel( new $classModel );
+        //var_dump($this->getModel());
+        //return $this->getModel();
     }
     
     function getModel(){
