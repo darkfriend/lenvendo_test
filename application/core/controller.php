@@ -20,8 +20,9 @@ class controller{
     
     protected function initModule($moduleName){
         $module_path = PATH_ROOT.'/application/models/';
-        if(is_dir($module_path.$moduleName)){
-            $module_path = $module_path.$moduleName.'/'.$moduleName.'_model.php';
+        if(is_dir($module_path.$moduleName.'_models')){
+            echo "test";
+            $module_path = $module_path.$moduleName.'_models/'.$moduleName.'_model.php';
         } elseif ( file_exists($module_path.$moduleName.'_model.php') ) {
             $module_path = $module_path.$moduleName.'_model.php';
         } else {
@@ -47,9 +48,16 @@ class controller{
     }
     
     public function getRequestQuery($val=null, $method='POST'){
-        if($_SERVER['REQUEST_METHOD']==$method){
-            return $this->clearanceValues($_POST[$val]);
+        switch ($method) {
+            case 'POST' : $methodArray=$_POST; break;
+            case 'GET' : $methodArray=$_GET; break;
         }
+        if(!$methodArray) return false;
+        if($_SERVER['REQUEST_METHOD']==$method){
+            $val = $val ? $methodArray[$val] : $methodArray;
+            return $this->clearanceValues($val);
+        }
+        return false;
     }
 
     public function clearanceValues($array){
@@ -57,7 +65,7 @@ class controller{
             foreach ($array as $key=>$value){
                 if(is_array($value)){
                     #делаю рекурсию
-                    $newArray[$key][] = $this->getAllPost( $value );
+                    $newArray[$key][] = $this->clearanceValues( $value );
                 } else {
                     $newArray[$key] = $this->clearSpecSym( $value );
                 }
@@ -68,7 +76,13 @@ class controller{
     
     private function clearSpecSym($data){
         if (get_magic_quotes_gpc()) $data = stripslashes($data);
+        define('ENT_SUBSTITUTE', ENT_IGNORE);
         $data = htmlspecialchars($data, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED | ENT_SUBSTITUTE, 'UTF-8');
+        $data = preg_replace('#\W#', '', $data);
         return $data;
+    }
+    
+    public function getUser(){
+        return $_SESSION['user_id'];
     }
 }

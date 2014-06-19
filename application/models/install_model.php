@@ -23,10 +23,10 @@ class install_model extends model{
 //        //parent::set_data();
 //    }
     
-    public function __construct() {
+    /*public function __construct() {
         parent::__construct();
         //$this->start_module();
-    }
+    }*/
     
     public function start_module() {
         userExeption::startException(true, 'setErrorException');
@@ -77,8 +77,8 @@ class install_model extends model{
         $result_create = $this->db->query('
             CREATE TABLE IF NOT EXISTS users (
                 ID int(11) NOT NULL AUTO_INCREMENT,
-                login int(11) NOT NULL,
-                pass varchar(36) NOT NULL,
+                login varchar(255) NOT NULL,
+                pass varchar(255) NOT NULL,
                 data_auth date NOT NULL,
                 privilege_id int(11) NOT NULL,
                 PRIMARY KEY (ID)

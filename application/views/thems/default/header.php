@@ -13,7 +13,9 @@
     </head>
     <body>
     <?php
-    if (!empty($_POST['data'])){
+    //$mainCont = new controller_main();
+    //var_dump( $mainCont->getRequestQuery(null, 'GET') );
+    /*if (!empty($_POST['data'])){
         $data = filter_input(INPUT_POST, 'data', FILTER_SANITIZE_URL);
         $name = md5($data);
         $file = "/$name.png";
@@ -26,7 +28,7 @@
         echo $file."<br>";
         echo $parentImgID;
         die();
-    }
+    }*/
     ?>
     <header class="container panel panel-default">
         <div class="row">

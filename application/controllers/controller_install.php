@@ -29,7 +29,8 @@ class controller_install extends controller {
         //var_dump($this->model);
         //$this->model->table_check();
         //$this->step1();
-        #выполняю проверку БД
+        
+        #запускаю модель
         $arData['check_db'] = $this->getModel()->start_module();
         
         //var_dump($this->getModel()->start_module());

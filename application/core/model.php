@@ -34,7 +34,7 @@ class model{
         return $query;
     }
     
-    public function getRequestQuery($val=null, $method='POST'){
+    /*public function getRequestQuery($val=null, $method='POST'){
         if($_SERVER['REQUEST_METHOD']==$method){
             return $this->clearanceValues($_POST[$val]);
         }
@@ -58,5 +58,7 @@ class model{
         if (get_magic_quotes_gpc()) $data = stripslashes($data);
         $data = htmlspecialchars($data, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED | ENT_SUBSTITUTE, 'UTF-8');
         return $data;
-    }
+    }*/
+    
+    
 }
