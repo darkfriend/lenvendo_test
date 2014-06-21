@@ -104,6 +104,7 @@ class controller_ajax extends controller {
     
     public function action_mergeimg() {
         echo 'action_mergeimg';
+        
     }
     
 //    public function action_ajax(){
