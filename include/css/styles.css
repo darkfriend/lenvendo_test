@@ -12,3 +12,6 @@
 #main_menu.navbar{
     min-height: initial;
 }
+.container .form-control-feedback{
+    top:0;
+}

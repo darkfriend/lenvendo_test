@@ -18,10 +18,13 @@ class controller{
         
     }
     
-    protected function initModule($moduleName){
+    protected function initModule($moduleName, $dirModel=false){
         $module_path = PATH_ROOT.'/application/models/';
+        if($dirModel){
+            $module_path .= $dirModel.'/';
+        }
         if(is_dir($module_path.$moduleName.'_models')){
-            echo "test";
+            //echo "test";
             $module_path = $module_path.$moduleName.'_models/'.$moduleName.'_model.php';
         } elseif ( file_exists($module_path.$moduleName.'_model.php') ) {
             $module_path = $module_path.$moduleName.'_model.php';
@@ -84,5 +87,28 @@ class controller{
     
     public function getUser(){
         return $_SESSION['user_id'];
+    }
+    
+    //возвращает id сессии или создаёт сессию и возвращает id
+    public function getSession(){
+        if(session_id()){
+            return session_id();
+        } else {
+            return session_start();
+        }
+    }
+    
+    //удаляет сессию вместе с куками сессии
+    public function destroySession(){
+        if(session_id()){
+            setcookie(session_name(),session_id(), time()-60*60*24);
+            if(session_unset() && session_destroy()){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
