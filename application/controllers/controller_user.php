@@ -98,13 +98,6 @@ class controller_user extends controller {
         }
     }
     
-    //метод для проверки авторизованности
-    public function isAuth(){
-        if( !empty($_SESSION['login']) || !empty($_SESSION['id_user']) ){
-            return true;
-        }
-    }
-    
     //регистрация пользователя
     public function action_reg(){ 
         if($_POST['login'] || $_POST['pass']){

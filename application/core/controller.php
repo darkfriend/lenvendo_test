@@ -3,7 +3,8 @@ class controller{
     public $model,
         $view,
         $params,
-        $paramLength;
+        $paramLength,
+        $controller;
     
     function __construct() {
         $this->view = new View();
@@ -35,21 +36,50 @@ class controller{
         include $module_path;
         
         $classModel = $moduleName.'_model';
-        //return new $classModel();
-        //new install_model()->start_module();
         $this->setModel( new $classModel );
-        //var_dump($this->getModel());
-        //return $this->getModel();
     }
     
-    function getModel(){
+    protected function initController($controllerName, $dirController=false){
+        $controller_path = PATH_ROOT.'/application/controllers/';
+        if($dirController){
+            $controller_path .= $dirController.'/';
+        }
+        if(is_dir($controller_path)){
+            //echo "test";
+            $controller_path = $controller_path.'controller_'.$controllerName.'.php';
+        } elseif ( file_exists($controller_path.'controller_'.$controllerName.'.php') ) {
+            $controller_path = $controller_path.'controller_'.$controllerName.'.php';
+        } else {
+            userExeption::startException();
+            throw new Exception('No controller!');
+        }
+        include $controller_path;
+        
+        $classController = 'controller_'.$controllerName;
+        $this->setController( new $classController, $controllerName );
+    }
+    
+    //возвращает объект инициализированной модели
+    public function getModel(){
         return $this->model;
     }
     
-    function setModel($modelObj){
+    //записывает объект инициализированной модели
+    public function setModel($modelObj){
         $this->model = $modelObj;
     }
     
+    //возвращает объект инициализированного контроллера, с ключём как имя контроллера
+    public function getController($name){
+        return $this->controller[$name];
+    }
+    
+    //записывает объект инициализированного контроллера, с ключём как имя контроллера
+    public function setController($modelObj, $name){
+        $this->controller[$name] = $modelObj;
+    }
+    
+    //возвращает обработанные request данные
     public function getRequestQuery($val=null, $method='POST'){
         switch ($method) {
             case 'POST' : $methodArray=$_POST; break;
@@ -87,6 +117,13 @@ class controller{
     
     public function getUser(){
         return $_SESSION['user_id'];
+    }
+    
+    //метод для проверки авторизованности
+    public function isAuth(){
+        if( !empty($_SESSION['login']) || !empty($_SESSION['id_user']) ){
+            return true;
+        }
     }
     
     //возвращает id сессии или создаёт сессию и возвращает id

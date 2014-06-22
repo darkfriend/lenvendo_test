@@ -19,16 +19,15 @@ class controller_ajax extends controller {
 
     public function __construct() {
         parent::__construct();
-        $this->initModule('ajax');
+        //$this->initModule('ajax');
     }
     
     public function action_index(){
-        
         #запускаю модель
         //$arData['name_img'] = $this->getModel()->start_module();
         $arData['REQUEST'] = $this->getModel()->start_module();
         var_dump($arData);
-        exit;
+        //exit;
         //if($arData['REQUEST']['name_img'])
         list($width,$height,$type)= getimagesize($arData['name_img']);
         if( in_array( $type, array(1,2,3)) ){
@@ -36,6 +35,32 @@ class controller_ajax extends controller {
         } else {
             $this->params = 'Ошибка! Изображение не создано!';
         }
+        
+    }
+    
+    //метод добавления картинки
+    public function action_picture_add() {
+        //var_dump('$arData');
+        $arData['REQUEST_POST'] = $this->getRequestQuery();
+        $isAuth = $this->isAuth();
+        if($isAuth){
+            //инициализация конроллера картинок
+            $this->initController('picture');
+            echo 'action_picture_add';
+            //получаю объект контроллера
+            $this->getController('picture')->picture_merge();
+        } else {
+            $data['error'] = true;
+            $data['result_msg'] = 'Вы не <a href="/user/auth/">авторизовались</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
+        }
+        $this->view->render( 'ajax_view.php', 'ajax/ajax_temp.php', $data );
+    }
+    
+    public function action_picture_edit() {
+        
+    }
+    
+    public function action_picture_delete() {
         
     }
     
