@@ -68,7 +68,9 @@ class controller_user extends controller {
             $data = '';
         }
         
-        $this->view->render( 'user/auth_view.php', 'template_view.php', $data );
+        $data['user_id'] = $this->user['user_id'];
+        $data['login'] = $this->user['login'];
+        $this->view->render( 'user/auth_view.php', EX_TEMPLATE, $data );
     }
     
     /*
@@ -93,8 +95,8 @@ class controller_user extends controller {
         //проверяю логин и пароль
         $resultCheck = $this->getModel()->checkAuthData( trim($reqestHeader['login']),md5($reqestHeader['pass']) );
         if($resultCheck['check_auth']){
-            $this->login = $_SESSION['login'] = trim($reqestHeader['login']);
-            $this->id_user = $_SESSION['id_user'] = $resultCheck['id_user'];
+            $this->user['login'] = $_SESSION['login'] = trim($reqestHeader['login']);
+            $this->user['user_id'] = $_SESSION['id_user'] = $resultCheck['id_user'];
             $this->isAuth = true;
             return true;
         } else {
@@ -131,6 +133,8 @@ class controller_user extends controller {
             }
         }
         
+        $data['user_id'] = $this->user['user_id'];
+        $data['login'] = $this->user['login'];
         $this->view->render( 'user/reg_view.php', 'template_view.php', $data );
     }
     
@@ -153,8 +157,8 @@ class controller_user extends controller {
         //проверяю логин и пароль
         $resultRegister = $this->getModel()->register_user( trim($reqestHeader['login']),md5($reqestHeader['pass']) );
         if($resultRegister['check_auth']){
-            $this->login = $_SESSION['login'] = trim($reqestHeader['login']);
-            $this->id_user = $_SESSION['id_user'] = $resultRegister['id_user'];
+            $this->user['login'] = $_SESSION['login'] = trim($reqestHeader['login']);
+            $this->user['user_id'] = $_SESSION['id_user'] = $resultRegister['id_user'];
             return true;
         } else {
             //throw new Exception('Пользователь с такими данными не найден!');

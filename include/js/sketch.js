@@ -94,7 +94,7 @@ var __slice = Array.prototype.slice;
       }
     }
     Sketch.prototype.download = function(format) {
-      var mime;
+      var mime, urlForAjax, dataAjax;
       format || (format = "png");
       if (format === "jpg") {
         format = "jpeg";
@@ -128,12 +128,29 @@ var __slice = Array.prototype.slice;
           //this.context = this.canvas.setContext($oldContext);
       }*/
       //console.log(this.el.toDataURL(mime));
+      //var datds = this.el.toDataURL(mime);
+      //console.log(format);
+      
+      var imgid = parseInt($('#colors_sketch').data('imgid'));
+      console.log('imgid='+imgid);
+      if(imgid){
+          urlForAjax = '/ajax/picture_edit/';
+          dataAjax = 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid'))+'&format='+format;
+      } else {
+          urlForAjax = '/ajax/picture_add/';
+          dataAjax = 'data='+this.el.toDataURL(mime)+'&format='+format;
+      }
+      
       $.ajax({
-         url: '/',
+         url: urlForAjax,
          type: "POST",
-         data: 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid')),
-         success : function(data){
-             console.log(data);
+         //data: 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid')),
+         data: dataAjax,
+         success : function(request){
+             //console.log(datds);
+            console.log(request);
+             request = JSON.parse(request);
+             //console.log(request);
          }
          
       });

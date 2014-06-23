@@ -50,7 +50,8 @@
         </div>
     </header>
     <section class="panel-body">
-        <canvas id="colors_sketch" height="300" data-imgid='2' data-img='/upload/16.06.2014/239595759_3c3626b24a_b.jpg' style="background: url('/upload/16.06.2014/239595759_3c3626b24a_b.jpg') no-repeat; background-size: cover;"></canvas>
+<!--        data-imgid='2'-->
+        <canvas id="colors_sketch" height="300"  data-img='/upload/16.06.2014/239595759_3c3626b24a_b.jpg' style="background: url('/upload/16.06.2014/239595759_3c3626b24a_b.jpg') no-repeat; background-size: cover;"></canvas>
     </section>
     <footer class="panel-footer nav">
         <div class="tools2 pull-right">

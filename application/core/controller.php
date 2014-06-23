@@ -4,13 +4,18 @@ class controller{
         $view,
         $params,
         $paramLength,
-        $controller;
+        $controller,
+        $user;
     
     function __construct() {
         $this->view = new View();
         $fc = Route::getInstance();
         $this->params = $fc->getParams();
         $this->paramLength = $fc->getLengthParam();
+        $this->getSession(); //старт сессии
+        
+        $this->user['user_id'] = $this->getUser();
+        $this->user['login'] = $this->getLogin();
         #var_dump($fc);
         //var_dump($this->params);
     }
@@ -95,6 +100,7 @@ class controller{
 
     public function clearanceValues($array){
         //if($_SERVER['REQUEST_METHOD']=='POST'){
+        if(is_array($array)){
             foreach ($array as $key=>$value){
                 if(is_array($value)){
                     #делаю рекурсию
@@ -103,23 +109,29 @@ class controller{
                     $newArray[$key] = $this->clearSpecSym( $value );
                 }
             }
-            return $newArray;
-        //}
+        } else {
+            $newArray = $this->clearSpecSym( $array );
+        }
+        return $newArray;
     }
     
     private function clearSpecSym($data){
         if (get_magic_quotes_gpc()) $data = stripslashes($data);
         define('ENT_SUBSTITUTE', ENT_IGNORE);
         $data = htmlspecialchars($data, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED | ENT_SUBSTITUTE, 'UTF-8');
-        $data = preg_replace('#\W#', '', $data);
+        //$data = preg_replace('#\W#', '', $data);
         return $data;
     }
     
     public function getUser(){
-        return $_SESSION['user_id'];
+        return $_SESSION['id_user'];
     }
     
-    //метод для проверки авторизованности
+    public function getLogin(){
+        return $_SESSION['login'];
+    }
+
+        //метод для проверки авторизованности
     public function isAuth(){
         if( !empty($_SESSION['login']) || !empty($_SESSION['id_user']) ){
             return true;

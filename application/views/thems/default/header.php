@@ -37,11 +37,16 @@
             </div>
             <div class="panel panel-info pull-right">
                 <header class="panel-heading">
-                    <span>Привет, Гость!</span>
+                    <span>Привет, <?=($data['user_id']) ? $data['login'] : 'Гость' ?>!</span>
                 </header>
                 <section class="panel-body">
-                    <a href="#" class="btn btn-primary">Авторизация</a>
-                    <a href="#" class="btn btn-primary">Регистрация</a>
+                    <? if($data['user_id']) { ?>
+                        <a href="/user/" class="btn btn-primary">Мой профиль</a>
+                        <a href="/user/exit/" class="btn btn-danger">Выйти</a>
+                    <? } else { ?>
+                        <a href="/user/auth/" class="btn btn-primary">Авторизация</a>
+                        <a href="/user/reg/" class="btn btn-primary">Регистрация</a>
+                    <? } ?>
                 </section>
             </div>
         </div>

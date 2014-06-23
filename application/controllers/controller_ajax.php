@@ -41,18 +41,21 @@ class controller_ajax extends controller {
     //метод добавления картинки
     public function action_picture_add() {
         //var_dump('$arData');
-        $arData['REQUEST_POST'] = $this->getRequestQuery();
-        $isAuth = $this->isAuth();
-        if($isAuth){
+        //$arData['REQUEST_POST'] = $this->getRequestQuery();
+        //$isAuth = $this->isAuth();
+        if($this->isAuth()){
             //инициализация конроллера картинок
             $this->initController('picture');
-            echo 'action_picture_add';
-            //получаю объект контроллера
-            $this->getController('picture')->picture_merge();
+            //echo 'action_picture_add';
+            //запускаю контроллер картинок. Метод добавления.
+            $data = $this->getController('picture')->action_add(true);
         } else {
             $data['error'] = true;
-            $data['result_msg'] = 'Вы не <a href="/user/auth/">авторизовались</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
+            $data['result_msg'] = 'Авторизуйтесь или зарегистрируйтесь!';
+            $data['result_msg_html'] = 'Вы не <a href="/user/auth/">авторизовались</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
         }
+        $data['user_id'] = $this->user['user_id'];
+        $data['login'] = $this->user['login'];
         $this->view->render( 'ajax_view.php', 'ajax/ajax_temp.php', $data );
     }
     
@@ -85,14 +88,14 @@ class controller_ajax extends controller {
     }
     
     #сохраняет нарисованную картинку
-    private function saveRequestFile($data){
+    /*private function saveRequestFile($data){
         $image = str_replace(" ", "+", $data);
         $image = substr($image, strpos($image, ","));
         //$dirDateMonth = date('m.Y');
         $path_file = PATH_TO_SAVE_IMG.'/'.date('m.Y').$data;
         file_put_contents($path_file, base64_decode($image));
         return $path_file;
-    }
+    }*/
     
     //возвращаю родительскую картинку
     private function getParentFile(){
