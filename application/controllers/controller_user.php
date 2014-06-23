@@ -49,21 +49,23 @@ class controller_user extends controller {
             $this->view->render( 'user/auth_view.php', 'template_view.php', $data );
             return true;
         }*/
-        
         if ($this->authUser()) {
             $data['result'] = 'Вы успешно авторизованны!';
+            $data['isAuth'] = $this->isAuth;
         } elseif($this->isAuth) { //!empty($this->msg)
             //$data = 'Авторизация не удалась. Пользователь с такими данными не найден!';
             $data['error'] = true;
             $data['isAuth'] = true;
             $data['result'] = 'Авторизация не удалась.';
             $data['result_msg'] = $this->msg;
-        } else {
+        } elseif(!$this->noRequest) {
             $data['error'] = true;
             $data['result'] = 'Авторизация не удалась.';
             $data['result_msg'] = $this->msg;
             //$data['result'] = 'Авторизация не удалась.';
             //$data['result_msg'] = $this->msg;
+        } else {
+            $data = '';
         }
         
         $this->view->render( 'user/auth_view.php', 'template_view.php', $data );
@@ -84,12 +86,16 @@ class controller_user extends controller {
         $this->initModule('auth', PATH_TO_USER_MODELS);
         //возвращаю весь $_POST
         $reqestHeader = $this->getRequestQuery();
-        if (!$reqestHeader) return false;
+        if (!$reqestHeader['login']){
+            $this->noRequest = true;
+            return false;
+        }
         //проверяю логин и пароль
         $resultCheck = $this->getModel()->checkAuthData( trim($reqestHeader['login']),md5($reqestHeader['pass']) );
         if($resultCheck['check_auth']){
             $this->login = $_SESSION['login'] = trim($reqestHeader['login']);
             $this->id_user = $_SESSION['id_user'] = $resultCheck['id_user'];
+            $this->isAuth = true;
             return true;
         } else {
             //throw new Exception('Пользователь с такими данными не найден!');
