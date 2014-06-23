@@ -132,7 +132,8 @@ var __slice = Array.prototype.slice;
       //console.log(format);
       
       var imgid = parseInt($('#colors_sketch').data('imgid'));
-      console.log('imgid='+imgid);
+      //console.log('imgid='+imgid);
+      console.log('toDataURL='+this.el.toDataURL(mime));
       if(imgid){
           urlForAjax = '/ajax/picture_edit/';
           dataAjax = 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid'))+'&format='+format;
