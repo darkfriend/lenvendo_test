@@ -1,17 +1,13 @@
-<?
-if($data['error']){
-?>
-    <? if($data['isAuth']){ ?>
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong><?=$data['result']?> </strong><?=$data['result_msg'];?>
-        </div>
-    <? } else { ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong><?=$data['result']?> </strong><?=$data['result_msg'];?>
-        </div>
-    <? } ?>
+<? if($data['isAuth']){ ?>
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong><?=$data['result']?> </strong><?=$data['result_msg'];?>
+    </div>
+<? } elseif($data['error']) { ?>
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong><?=$data['result']?> </strong><?=$data['result_msg'];?>
+    </div>
 <? } ?>
 <? if(!$data['isAuth']){ ?>
 <form action="/user/auth/" method="POST" role="form">
