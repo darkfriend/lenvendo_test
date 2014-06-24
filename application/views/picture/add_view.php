@@ -1,6 +1,12 @@
 <? var_dump($data); ?>
 
-<? if( !$data['result'] && $data['user_id'] ){ ?>
+<? if( !$data['result'] && $data['user_id'] && !$data['error'] ){ ?>
+<? if($data['edit']){ ?>
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <?=$data['result_msg'];?>
+    </div>
+<? } ?>
 <div id="colors_canvas" class="panel panel-primary">
     <header class="panel-heading">
         <div class="btn-toolbar">
@@ -53,19 +59,21 @@
         </div>
     </header>
     <section class="panel-body">
-<!--        data-imgid='2'-->
-        <canvas id="colors_sketch" height="300"  data-img='/upload/16.06.2014/239595759_3c3626b24a_b.jpg' style="background: url('/upload/16.06.2014/239595759_3c3626b24a_b.jpg') no-repeat; background-size: cover;"></canvas>
+<canvas id="colors_sketch" data-imgid='<?=$data['arrResult']['id']?>' height="<?= $data['arrResult']['size']['height'] ? $data['arrResult']['size']['height'] : '300' ?>" width="<?=$data['arrResult']['size']['width']?>" data-img='<?=PATH_TO_SAVE_IMG.$data['arrResult']['create_date'].'/'.$data['arrResult']['name_file']?>' style="background: url('<?=PATH_TO_SAVE_IMG.$data['arrResult']['create_date'].'/'.$data['arrResult']['name_file']?>') no-repeat; background-size: 100% 100%;"></canvas>
     </section>
     <footer class="panel-footer nav">
+        <div class="tools2 pull-left">
+            <a href="/picture/" data-redraw="" class="btn btn-toolbar">&DoubleLeftArrow; Назад</a>
+        </div>
         <div class="tools2 pull-right">
             <a href="#colors_sketch" data-download="png" class="btn bg-primary">Сохранить</a>
-            <a id="canvas_clear" href="#colors_sketch" data-redraw="" class="btn btn-warning">Очистить</a>
+            <a id="canvas_clear" href="#colors_sketch" data-redraw="" class="btn btn-warning">Удалить</a>
         </div>
     </footer>
 </div>
 <? } else { ?>
     <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Внимание! </strong><?=$data['result_msg_html'];?>
+        <strong>Внимание! </strong><?= $data['result_msg_html'] ? $data['result_msg_html'] : $data['result_msg'];?>
     </div>
 <? } ?>

@@ -5,7 +5,7 @@ class controller_picture extends controller {
             $hashFile,
             $msg;
     
-    private $flag = array( //поддерживаемые расширения
+    public $flag = array( //поддерживаемые расширения
                 1=>'GIF',
                 2=>'JPG',
                 3=>'PNG',
@@ -68,44 +68,49 @@ class controller_picture extends controller {
     }
     
     public function action_edit($json=false){
+        
         #Объявляю свой обработчик ошибок
         userExeption::startException();
         if( !$id_picture = $this->clearanceValues($this->params['id']) ){
             throw new Exception('no params in edit picture');
         }
-        var_dump($this->params);
+        
+        //var_dump($this->params);
+        
         if($this->isAuth()){
             //инициализация модели картинок
             $this->initModule('pictures');
             if( !$rowResult=$this->getModel()->check_permisssion_edit( array( 'id_img' => $id_picture, 'user_id' => $this->getUser() ) ) ){
-                $this->msg = 'Вам нельзя редактировать данный файл!';
+                $this->msg = 'Вам нельзя редактировать данный файл или файл не найден.';
                 $result = 'error';
-            } elseif ( !$this->getRequestQuery('data') ){
-                var_dump($rowResult);
+            } elseif ( !$pictNew = $this->getRequestQuery('data') ){
+                //var_dump($rowResult);
+                //$result = array();
+                $sizePictMain = $this->getSizeTypeImage( PATH_ROOT.PATH_TO_SAVE_IMG.$rowResult['create_date'].'/'.$rowResult['name_file'] );
+                //var_dump($sizePictMain);
+                $fileEdit = true;
                 $this->msg = 'Хэш не найден';
             } elseif( $format = $this->getRequestQuery('format') ) {
+                //[\\](\w+\.png|jpg)$
                 
-                //$name = md5($this->getRequestQuery('data').time());
-                //$file = "/$name.".$format;
-                //var_dump($format);
-                $pathFile = $this->mergePictures($pict1, $pict2, USER_IMAGE_EDIT_MARGE);
-                if (!file_exists($file)){
-                    //$pathToFile = $this->saveRequestFile( array($file , $this->getRequestQuery('data')) );
-                    if (file_exists($pathToFile)){
+                $nameNew = md5($pictNew.time());
+                $fileNew = '/'.$nameNew.'.'.$format;
+                $pathToNewFile = $this->saveRequestFile($fileNew , $pictNew);
+                $pict1 = PATH_ROOT.PATH_TO_SAVE_IMG.$rowResult['create_date'].'/'.$rowResult['name_file'];
                         
-                        if($resultInsert = $this->getModel()->set_data( array( 'picture_name'=>$file, 'user_id'=>$this->getUser() ) )){
-                            $data = $file;
-                            $this->msg = 'file created';
-                        } else {
-                            $this->msg = 'Ошибка добавления';
-                        }
-                        //echo 'file created';
+                $pathFile = $this->mergePictures($pict1, $pathToNewFile, USER_IMAGE_EDIT_MARGE);
+                preg_match('#[\\](\w+\.\w+)$#', $pathFile, $nameFile);
+                $nameFile = $nameFile[1];
+                if (file_exists($pathFile)){
+                    if($this->getModel()->update_data($id_picture, $nameFile)){
+                        $data = $nameFile;
+                        $this->msg = 'Файл успешно отредактирован.';
+                        $isEdit = true;
                     } else {
-                        $this->msg = 'file NOT created';
-                        //echo 'file NOT created';
+                        $this->msg = 'Ошибка редактирования. БД не обновлена!';
                     }
                 } else {
-                    $this->msg = 'file уже есть!';
+                    $this->msg = 'Ошибка редактирования. Файл не найден!';
                 }
             } else {
                 $this->msg = 'формат не найден';
@@ -114,21 +119,37 @@ class controller_picture extends controller {
             $this->msg  = 'Авторизуйтесь или зарегистрируйтесь!';
             $result_msg_html = '<a href="/user/auth/">Авторизуйтесь</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
         }
+        
         if($json){
             //$mainBlock = '../picture/ajax_view.php';
             //$template = 'ajax/ajax_temp.php';
-            return array( 'result' => $data, 'result_msg'=>$this->msg );
+            return array( 'result' => $data, 'result_msg'=>$this->msg, 'edit'=>$isEdit );
         } else {
-            $mainBlock = 'picture/add_view.php';
-            $template = EX_TEMPLATE;
+            //$mainBlock = 'picture/add_view.php';
+            //$template = EX_TEMPLATE;
             $data = array( 'result' => $data, 'result_msg'=>$this->msg, 'result_msg_html'=>$result_msg_html );
             
             $data['user_id'] = $this->user['user_id'];
             $data['login'] = $this->user['login'];
-           
+            
+            if($isEdit){
+                $data['edit'] = true;
+            }
+            
+            if($result=='error'){
+                $data['error'] = true;
+            }
+            
+            if($fileEdit){
+                $data['arrResult']=$rowResult;
+                $data['arrResult']['id']=$id_picture;
+                $data['arrResult']['size'] = $sizePictMain;
+            }
+            
             $this->view->render( 'picture/add_view.php', EX_TEMPLATE, $data );
             //$this->view->render( $mainBlock, $template, $data );
         }
+        
         //$this->view->render( 'picture/add_view.php', EX_TEMPLATE, $data );
         
         /*if(!$this->getRequestQuery('data')){
@@ -197,7 +218,7 @@ class controller_picture extends controller {
      * @param string $path_file - абсолютный путь до сохраняемого файла
      * @return string $path_file - абсолютный путь до сохраняемого файла
      */
-    protected function saveRequestFile($file,$data,$path_file){
+    protected function saveRequestFile($file,$data,$path_file=false){
         $image = str_replace(" ", "+", $data);
         $image = substr($image, strpos($image, ","));
         //$dirDateMonth = date('m.Y');
@@ -219,8 +240,8 @@ class controller_picture extends controller {
      */
     private function mergePictures($pict1, $pict2, $merge=false){
         //if($pict1['typeImg']!==$pict2['typeImg']) return false;
-        $sizePict1 = $this->getSizeTypeImage($pict1['path']);
-        $sizePict2 = $this->getSizeTypeImage($pict2['path']);
+        $sizePict1 = $this->getSizeTypeImage($pict1);
+        $sizePict2 = $this->getSizeTypeImage($pict2);
         
         if($sizePict1['type'] !== $sizePict2['type']) return false;
         
@@ -229,16 +250,16 @@ class controller_picture extends controller {
         //$sizePict1['type'] = 'png';
         switch($sizePict1['type']){
             case 'jpg' :
-                $src1 = imagecreatefromjpeg($pict1['path']);
+                $src1 = imagecreatefromjpeg($pict1);
                     imagealphablending($src1, true);
-                $src2 = imagecreatefromjpeg($pict2['path']);
+                $src2 = imagecreatefromjpeg($pict2);
                     imagealphablending($src2, true);
                 break;
             case 'png' :
-                $src1 = imagecreatefrompng($pict1['path']);
+                $src1 = imagecreatefrompng($pict1);
                     imagealphablending($src1, true);
                     imagesavealpha($src1, true);
-                $src2 = imagecreatefrompng($pict2['path']);
+                $src2 = imagecreatefrompng($pict2);
                     imagealphablending($src2, true);
                     imagesavealpha($src2, true);
                 break;
@@ -247,7 +268,7 @@ class controller_picture extends controller {
         if(!$src1 || !$src2) return false;
         
         if($merge){
-            $genFile = $pict1['path'];
+            $genFile = $pict1;
         } else {
             $genFile = PATH_ROOT.PATH_TO_SAVE_IMG.date('m.Y').md5(time()).'.'.$sizePict1['type'];
         }
@@ -262,7 +283,7 @@ class controller_picture extends controller {
                     imagepng($src1, $genFile );
                     break;
             }
-            
+            unlink($pict2);
             imagedestroy($src1);
             imagedestroy($src2);
             
@@ -300,13 +321,15 @@ class controller_picture extends controller {
         if(!$absolute){
             $path = PATH_ROOT.$path;
         }
-        list($img['width'],$img['height'],$img['type'])= getimagesize($path);
+        list($img['width'],$img['height'],$img['type']) = getimagesize($path);
         $result = array();
         foreach($return as $key=>$val){
             switch ($val){
                 case 'type' :   
-                    if(!empty($this->flag[$img['type']])){
-                        $result['type'] = $this->flag[$img['type']];
+                    if(!empty($this->flag[$img['type']])){ 
+                        //echo $this->flag[$img['type']];
+                        $result['type'] =  mb_strtolower( $this->flag[$img['type']] );
+                        break;
                     } else {
                         $result = false;
                         break;
