@@ -21,3 +21,4 @@ define('DB_USER', 'root'); #логин пользователя
 define('DB_USER_PASSWORD', ''); #пароль пользователя
 
 define('USER_GROUP_DEFAULT', 2); #группа пользователей по умолчанию
+define('USER_IMAGE_EDIT_MARGE', true); #группа пользователей по умолчанию
