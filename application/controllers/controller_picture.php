@@ -69,9 +69,15 @@ class controller_picture extends controller {
     
     public function action_edit($json=false){
         
+        if($json){
+            $id_picture = $this->getRequestQuery('imgid');
+        } else {
+            $id_picture = $this->clearanceValues($this->params['id']);
+        }
+        
         #Объявляю свой обработчик ошибок
         userExeption::startException();
-        if( !$id_picture = $this->clearanceValues($this->params['id']) ){
+        if( !$id_picture ){
             throw new Exception('no params in edit picture');
         }
         
