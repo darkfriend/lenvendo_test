@@ -80,9 +80,10 @@ class install_model extends model{
                 login varchar(255) NOT NULL,
                 pass varchar(255) NOT NULL,
                 data_auth date NOT NULL,
-                privilege_id int(11) NOT NULL,
+                privilege_id int(11) NOT NULL DEFAULT "2",
                 PRIMARY KEY (ID)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+            INSERT INTO users (login, pass, data_auth, privilege_id) VALUES ("admin", "21232f297a57a5a743894a0e4a801fc3", "2014-06-22", 1);
         ');
         //var_dump($result_create);
         return $result_create;
@@ -94,7 +95,8 @@ class install_model extends model{
                 ID int(11) NOT NULL AUTO_INCREMENT,
                 id_user int(11) NOT NULL,
                 name_file varchar(255) NOT NULL,
-                last_edit date NOT NULL,
+                last_edit datetime NOT NULL,
+                create_date varchar(100) NOT NULL,
                 PRIMARY KEY (ID)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
         ');
@@ -108,6 +110,8 @@ class install_model extends model{
                 name varchar(255) NOT NULL,
                 PRIMARY KEY (ID)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+            INSERT INTO user_privileges (ID, name) 
+                                        VALUES ("admin"), ("user");
         ');
         return $result_create;
     }
