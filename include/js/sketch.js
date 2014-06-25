@@ -10,30 +10,30 @@ var __slice = Array.prototype.slice;
     sketch = this.data('sketch');
     console.log('start');
     
-    var srcBackground = $('canvas').data('img');
-    if(srcBackground.length>0){
+    //var srcBackground = $('canvas').data('img');
+    //if(srcBackground.length>0){
         //this.context.globalCompositeOperation = 'lighten';
         //$oldContext = this.context;
         //console.log($oldContext);
-        var canvCont = document.getElementById('colors_sketch').getContext('2d');
-        var newBackground = new Image();
-        newBackground.src = srcBackground;
+        //var canvCont = document.getElementById('colors_sketch').getContext('2d');
+        //var newBackground = new Image();
+        //newBackground.src = srcBackground;
         //newBackground.setAttribute('crossorigin','annonymous');
         //console.log(this.context);
         //var canvCont = this.context;
-        newBackground.onload = function(){
+        /*newBackground.onload = function(){
             canvCont.drawImage(newBackground, 0, 0, $('#colors_sketch').width(), $('#colors_sketch').height());
             canvCont.globalCompositeOperation = 'source-over';
             //canvCont.clearRect(0, 0, $('canvas').width(), $('canvas').height());
             //canvCont.drawImage(canvCont, 0, 0, $('canvas').width(), $('canvas').height());
             //this.redraw();
-        };
+        };*/
         //this.redraw();
         //this.context.drawImage(newBackground, 0, 0, $('canvas').width(), $('canvas').height());
         //this.context.globalAlha = 0.5;
 
         //this.context = this.canvas.setContext($oldContext);
-    }
+    //}
     
     if (typeof key === 'string' && sketch) {
       if (sketch[key]) {
@@ -130,31 +130,77 @@ var __slice = Array.prototype.slice;
       //console.log(this.el.toDataURL(mime));
       //var datds = this.el.toDataURL(mime);
       //console.log(format);
+        //console.log(this.canvas.getContext('2d'));
+        var imgid = parseInt($('#colors_sketch').data('imgid'));
+        //console.log('imgid='+imgid);
+        //console.log('toDataURL='+this.el.toDataURL(mime));
+        if(imgid){
+            urlForAjax = '/ajax/picture_edit/';
+            dataAjax = 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt(imgid)+'&format='+format;
+        } else {
+            urlForAjax = '/ajax/picture_add/';
+            dataAjax = 'data='+this.el.toDataURL(mime)+'&format='+format;
+        }
+        initAjax(urlForAjax,dataAjax,imgid);
+        /*var generateMSG = function(action, msg){
+            var typeAlert;
+            action = action || 'picture_error';
+            msg = msg || 'Сообщение не полученно';
+            if(action=='picture_error'){
+                typeAlert = 'danger';
+            } else {
+                typeAlert = 'success';
+            }
+            if($('#'+action).length){
+                $('#'+action).show().find('.text_msg').text(msg);
+            } else {
+                $('#colors_canvas').before('\
+                    <div id="'+action+'" class="alert alert-'+typeAlert+' alert-dismissable myhide">\
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>\
+                        <span class="text_msg">'+msg+'</span>\
+                    </div>'
+                );
+                $('#'+action).show();
+            }
+        }
       
-      var imgid = parseInt($('#colors_sketch').data('imgid'));
-      //console.log('imgid='+imgid);
-      console.log('toDataURL='+this.el.toDataURL(mime));
-      if(imgid){
-          urlForAjax = '/ajax/picture_edit/';
-          dataAjax = 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid'))+'&format='+format;
-      } else {
-          urlForAjax = '/ajax/picture_add/';
-          dataAjax = 'data='+this.el.toDataURL(mime)+'&format='+format;
-      }
-      
-      $.ajax({
-         url: urlForAjax,
-         type: "POST",
-         //data: 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid')),
-         data: dataAjax,
-         success : function(request){
-             //console.log(datds);
-            console.log(request);
-             request = JSON.parse(request);
-             //console.log(request);
-         }
-         
-      });
+        $.ajax({
+           url: urlForAjax,
+           type: "POST",
+           //data: 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid')),
+           data: dataAjax,
+           success : function(request){
+              //console.log(request);
+              var jsonValid = !(/[^,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]/.test(
+                      request.replace(/"(\\.|[^"\\])*"/g, ''))) &&
+                      eval('(' + request + ')');
+              console.log('user='+jsonValid);
+              if(jsonValid!==false){
+                  request = JSON.parse(request);
+                  console.log(request);
+                  if(imgid){
+                      if( typeof request.result !== 'undefined' && request.edit ){
+                        generateMSG('picture_success', request.result_msg);
+                        console.log(request);
+                        return true;
+                      }
+                  } else {
+                      if( typeof request.result !== 'undefined' && request.result ){
+                        generateMSG('picture_success', request.result_msg);
+                        console.log(request);
+                        return true;
+                      }
+                  }
+                  
+                  //console.log(request);
+              } else {
+                  generateMSG('picture_error', 'полученный JSON не валиден!');
+                  //$('#picture_error').show().find('.text_msg').text('полученный JSON не валиден!');
+              }
+              generateMSG('picture_error', request.result_msg);
+           }
+
+        });*/
       //return window.open(this.el.toDataURL(mime));
     };
     Sketch.prototype.set = function(key, value) {

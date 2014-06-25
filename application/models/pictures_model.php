@@ -18,8 +18,8 @@ class pictures_model extends model{
         //return $this->db->getOne('SELECT ID FROM user_pictures WHERE ID=?i AND id_user=?i', $param['id_img'], $param['user_id']);
     }
     
-    public function get_data($param) {
-        //return $this->db->getOne('SELECT ID FROM users WHERE ID=?i AND id_user=?i', $param['id_img'], $param['user_id']);
+    public function get_data() {
+        return $this->db->getAll('SELECT * FROM user_pictures');
     }
     
     public function update_data($id, $nameFile) {

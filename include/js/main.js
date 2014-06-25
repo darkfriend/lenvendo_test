@@ -1,5 +1,16 @@
 $(function() {
     initCanvas();
+    $('#canvas_clear').click(function(){
+        clearCanvas();
+        return false;
+    });
+    $('#canvas_delete').click(function(){
+        var imgid = parseInt($('#colors_sketch').data('imgid')),
+            urlForAjax = '/ajax/picture_delete/';
+        var dataAjax = 'imgid='+parseInt(imgid);
+        removeImageCanvas(urlForAjax,dataAjax,imgid);
+        return false;
+    });
 });
 function initCanvas(){
     //config
@@ -23,8 +34,8 @@ function initCanvas(){
     });
     
     $('canvas').css({
-        width : $('main').innerWidth(),
-        marginLeft: '-16px' //.conteiner добавляет 15px по краям + 1px border
+        width : $('main').innerWidth()-2,
+        //marginLeft: '-16px' //.conteiner добавляет 15px по краям + 1px border
     });
     
     $('#colors_sketch').sketch();
@@ -41,3 +52,71 @@ function initCanvas(){
     });
 }
 
+function clearCanvas(){
+    $('#colors_sketch').remove();
+    $('#colors_canvas .panel-body').append('<canvas id="colors_sketch" height="300" width="1098"></canvas>');
+    $('#colors_sketch').sketch();
+}
+function initAjax(urlForAjax,dataAjax,imgid){
+    $.ajax({
+        url: urlForAjax,
+        type: "POST",
+        //data: 'data='+this.el.toDataURL(mime)+'&imgid='+parseInt($('#colors_sketch').data('imgid')),
+        data: dataAjax,
+        success : function(request){
+           //console.log(request);
+           var jsonValid = !(/[^,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]/.test(
+                   request.replace(/"(\\.|[^"\\])*"/g, ''))) &&
+                   eval('(' + request + ')');
+           console.log('user='+jsonValid);
+           if(jsonValid!==false){
+               request = JSON.parse(request);
+               console.log(request);
+               if(imgid){
+                   if( typeof request.result !== 'undefined' && request.edit ){
+                     generateMSG('picture_success', request.result_msg);
+                     console.log(request);
+                     return true;
+                   }
+               } else {
+                   if( typeof request.result !== 'undefined' && request.result ){
+                     generateMSG('picture_success', request.result_msg);
+                     console.log(request);
+                     return true;
+                   }
+               }
+
+               //console.log(request);
+           } else {
+               generateMSG('picture_error', 'полученный JSON не валиден!');
+               //$('#picture_error').show().find('.text_msg').text('полученный JSON не валиден!');
+           }
+           generateMSG('picture_error', request.result_msg);
+        }
+
+     });
+}
+function generateMSG(action, msg){
+    var typeAlert;
+    action = action || 'picture_error';
+    msg = msg || 'Сообщение не полученно';
+    if(action=='picture_error'){
+        typeAlert = 'danger';
+    } else {
+        typeAlert = 'success';
+    }
+    if($('#'+action).length){
+        $('#'+action).show().find('.text_msg').text(msg);
+    } else {
+        $('#colors_canvas').before('\
+            <div id="'+action+'" class="alert alert-'+typeAlert+' alert-dismissable myhide">\
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>\
+                <span class="text_msg">'+msg+'</span>\
+            </div>'
+        );
+        $('#'+action).show();
+    }
+}
+function removeImageCanvas(){
+    
+}

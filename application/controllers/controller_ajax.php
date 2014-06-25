@@ -60,11 +60,35 @@ class controller_ajax extends controller {
     }
     
     public function action_picture_edit() {
-        
+        if($this->isAuth()){
+            //инициализация конроллера картинок
+            $this->initController('picture');
+            //запускаю контроллер картинок. Метод редактирования.
+            $data = $this->getController('picture')->action_edit(true);
+        } else {
+            $data['error'] = true;
+            $data['result_msg'] = 'Авторизуйтесь или зарегистрируйтесь!';
+            $data['result_msg_html'] = 'Вы не <a href="/user/auth/">авторизовались</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
+        }
+        $data['user_id'] = $this->user['user_id'];
+        $data['login'] = $this->user['login'];
+        $this->view->render( 'ajax_view.php', 'ajax/ajax_temp.php', $data );
     }
     
     public function action_picture_delete() {
-        
+        if($this->isAuth()){
+            //инициализация конроллера картинок
+            $this->initController('picture');
+            //запускаю контроллер картинок. Метод удаления.
+            $data = $this->getController('picture')->action_delete(true);
+        } else {
+            $data['error'] = true;
+            $data['result_msg'] = 'Авторизуйтесь или зарегистрируйтесь!';
+            $data['result_msg_html'] = 'Вы не <a href="/user/auth/">авторизовались</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
+        }
+        $data['user_id'] = $this->user['user_id'];
+        $data['login'] = $this->user['login'];
+        $this->view->render( 'ajax_view.php', 'ajax/ajax_temp.php', $data );
     }
     
     private function startRender(){
@@ -124,15 +148,6 @@ class controller_ajax extends controller {
         } else {
             return false;
         }
-    }
-    
-    public function action_auth() {
-        echo 'action_auth';
-    }
-    
-    public function action_mergeimg() {
-        echo 'action_mergeimg';
-        
     }
     
 //    public function action_ajax(){

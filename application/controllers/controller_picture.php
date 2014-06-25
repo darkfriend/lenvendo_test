@@ -13,7 +13,15 @@ class controller_picture extends controller {
 
 
     public function action_index(){
-        
+        //инициализация модели картинок
+        $this->initModule('pictures');
+        $data['resultAll'] = $this->getModel()->get_data();
+//        echo '<pre>';
+//        print_r($resultAll);
+//        echo '</pre>';
+        $data['user_id'] = $this->user['user_id'];
+        $data['login'] = $this->user['login'];
+        $this->view->render( 'picture/index_view.php', EX_TEMPLATE, $data );
     }
     
     public function action_add($json=false){
@@ -32,17 +40,17 @@ class controller_picture extends controller {
                         $this->initModule('pictures');
                         if($resultInsert = $this->getModel()->set_data( array( 'picture_name'=>$file, 'user_id'=>$this->getUser() ) )){
                             $data = $file;
-                            $this->msg = 'file created';
+                            $this->msg = 'Файл создан и сохранён';
                         } else {
                             $this->msg = 'Ошибка добавления';
                         }
                         //echo 'file created';
                     } else {
-                        $this->msg = 'file NOT created';
+                        $this->msg = 'Файл не создан';
                         //echo 'file NOT created';
                     }
                 } else {
-                    $this->msg = 'file уже есть!';
+                    $this->msg = 'Такой файл уже есть!';
                 }
             } else {
                 $this->msg = 'формат не найден';
@@ -97,7 +105,7 @@ class controller_picture extends controller {
                 $fileEdit = true;
                 $this->msg = 'Хэш не найден';
             } elseif( $format = $this->getRequestQuery('format') ) {
-                //[\\](\w+\.png|jpg)$
+                //[\\](\w+\.png|jpg)$  2 - [\\](\w+\.\w+)
                 
                 $nameNew = md5($pictNew.time());
                 $fileNew = '/'.$nameNew.'.'.$format;
@@ -105,7 +113,8 @@ class controller_picture extends controller {
                 $pict1 = PATH_ROOT.PATH_TO_SAVE_IMG.$rowResult['create_date'].'/'.$rowResult['name_file'];
                         
                 $pathFile = $this->mergePictures($pict1, $pathToNewFile, USER_IMAGE_EDIT_MARGE);
-                preg_match('#[\\](\w+\.\w+)$#', $pathFile, $nameFile);
+                //echo $pathFile;
+                preg_match('/(\w+\.\w+)$/', $pathFile, $nameFile);
                 $nameFile = $nameFile[1];
                 if (file_exists($pathFile)){
                     if($this->getModel()->update_data($id_picture, $nameFile)){
@@ -129,7 +138,13 @@ class controller_picture extends controller {
         if($json){
             //$mainBlock = '../picture/ajax_view.php';
             //$template = 'ajax/ajax_temp.php';
-            return array( 'result' => $data, 'result_msg'=>$this->msg, 'edit'=>$isEdit );
+            $res = array( 'result' => $data, 'result_msg'=>$this->msg, 'edit'=>$isEdit );
+            if($fileEdit){
+                $res['arrResult']=$rowResult;
+                $res['arrResult']['id']=$id_picture;
+                $res['arrResult']['size'] = $sizePictMain;
+            }
+            return $res;
         } else {
             //$mainBlock = 'picture/add_view.php';
             //$template = EX_TEMPLATE;
@@ -196,8 +211,63 @@ class controller_picture extends controller {
         }*/
     }
     
-    public function action_delete(){
+    public function action_delete($json=false){
         
+        if($json){
+            $id_picture = $this->getRequestQuery('imgid');
+        } else {
+            $id_picture = $this->clearanceValues($this->params['id']);
+        }
+        
+        #Объявляю свой обработчик ошибок
+        userExeption::startException();
+        if( !$id_picture ){
+            throw new Exception('no params in edit picture');
+        }
+        
+        if($this->isAuth()){
+            //инициализация модели картинок
+            $this->initModule('pictures');
+            if( !$rowResult=$this->getModel()->check_permisssion_edit( array( 'id_img' => $id_picture, 'user_id' => $this->getUser() ) ) ){
+                $this->msg = 'Вам нельзя удалять данным файлом или файл не найден.';
+                $result = 'error';
+            } else {
+                if( $removed = $this->removeFile( PATH_ROOT.PATH_TO_SAVE_IMG.$rowResult['create_date'].'/'.$rowResult['name_file'], $id_picture )){
+                    $this->msg = 'Файл успешно удалён';
+                } else {
+                    $this->msg = 'Ошибка удалёния файла!';
+                }
+            }
+        } else {
+            $this->msg  = 'Авторизуйтесь или зарегистрируйтесь!';
+            $result_msg_html = '<a href="/user/auth/">Авторизуйтесь</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
+        }
+        
+        if($json){
+            $res = array( 'result' => $removed, 'result_msg'=>$this->msg, 'result_msg_html'=>$result_msg_html );
+            if($removed){
+                $res['arrResult']=$rowResult;
+                $res['arrResult']['id']=$id_picture;
+            }
+            return $res;
+        } else {
+            $data = array( 'result' => $removed, 'result_msg'=>$this->msg, 'result_msg_html'=>$result_msg_html );
+            
+            $data['user_id'] = $this->user['user_id'];
+            $data['login'] = $this->user['login'];
+            
+            /*if($isEdit){
+                $data['edit'] = true;
+            }*/
+            
+            if($fileEdit){
+                $data['arrResult']=$rowResult;
+                $data['arrResult']['id']=$id_picture;
+            }
+            
+            $this->view->render( 'picture/add_view.php', EX_TEMPLATE, $data );
+            //$this->view->render( $mainBlock, $template, $data );
+        }
     }
     
     protected function picture_merge() {
@@ -227,13 +297,17 @@ class controller_picture extends controller {
     protected function saveRequestFile($file,$data,$path_file=false){
         $image = str_replace(" ", "+", $data);
         $image = substr($image, strpos($image, ","));
-        //$dirDateMonth = date('m.Y');
+        
         if(!$path_file){
             $path_file = PATH_ROOT.PATH_TO_SAVE_IMG.date('m.Y').$file;
         } else {
             $path_file.=$file;
         }
-        file_put_contents($path_file, base64_decode($image));
+        
+        if(!file_put_contents($path_file, base64_decode($image))){
+            return false;
+        }
+        
         return $path_file;
     }
     
@@ -344,5 +418,25 @@ class controller_picture extends controller {
             }
         }
         return $result;
+    }
+    
+    /*
+     * полностью удаляет картинку
+     * @param string $file - бсолютный путь до файла
+     * @param integer $id - ID картинки в БД
+     * @return boolean
+     */
+    protected function removeFile($file,$id){
+        if(file_exists($file)){
+            $fileDeleted = unlink($file);
+        } else{
+            return false;
+        }
+        
+        $recDeleted = $this->getModel()->delete_data($id);
+        
+        if(!$fileDeleted || !$recDeleted) return false;
+        
+        return true;
     }
 }
