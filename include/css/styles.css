@@ -32,3 +32,8 @@ body {
 #colors_canvas .panel-body{
     padding: 0;
 }
+.block-center{
+    margin: 0 auto;
+    display: block;
+    width: 383px;
+}

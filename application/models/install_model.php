@@ -115,8 +115,4 @@ class install_model extends model{
         ');
         return $result_create;
     }
-
-    private function inslallTable(){
-        
-    }
 }

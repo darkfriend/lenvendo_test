@@ -1,16 +1,18 @@
 $(function() {
-    initCanvas();
-    $('#canvas_clear').click(function(){
-        clearCanvas();
-        return false;
-    });
-    $('#canvas_delete').click(function(){
-        var imgid = parseInt($('#colors_sketch').data('imgid')),
-            urlForAjax = '/ajax/picture_delete/';
-        var dataAjax = 'imgid='+parseInt(imgid);
-        removeImageCanvas(urlForAjax,dataAjax,imgid);
-        return false;
-    });
+    if($('#colors_sketch').length){
+        initCanvas();
+        $('#canvas_clear').click(function(){
+            clearCanvas();
+            return false;
+        });
+        $('#canvas_delete').click(function(){
+            var imgid = parseInt($('#colors_sketch').data('imgid')),
+                urlForAjax = '/ajax/picture_delete/';
+            var dataAjax = 'imgid='+parseInt(imgid);
+            removeImageCanvas(urlForAjax,dataAjax,imgid);
+            return false;
+        });
+    }
 });
 function initCanvas(){
     //config
@@ -81,6 +83,7 @@ function initAjax(urlForAjax,dataAjax,imgid){
                } else {
                    if( typeof request.result !== 'undefined' && request.result ){
                      generateMSG('picture_success', request.result_msg);
+                     clearCanvas();
                      console.log(request);
                      return true;
                    }

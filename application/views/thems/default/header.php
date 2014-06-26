@@ -94,6 +94,7 @@
                     <span>Привет, <?=($data['user_id']) ? $data['login'] : 'Гость' ?>!</span>
                 </header>
                 <section class="panel-body">
+                    <div class="btn-group">
                     <? if($data['user_id']) { ?>
                         <a href="/user/" class="btn btn-primary">Мой профиль</a>
                         <a href="/user/exit/" class="btn btn-danger">Выйти</a>
@@ -101,12 +102,16 @@
                         <a href="/user/auth/" class="btn btn-primary">Авторизация</a>
                         <a href="/user/reg/" class="btn btn-primary">Регистрация</a>
                     <? } ?>
+                    </div>
                 </section>
             </div>
         </div>
         <div>
             <nav id="main_menu" class="nav navbar navbar-default" role="navigation">
-                
+                    
+                    <li class="pull-left">
+                        <a href="/" class="">Главная</a>
+                    </li>
                     <li class="pull-left">
                         <a href="/picture/" class="">Все рисунки</a>
                     </li>

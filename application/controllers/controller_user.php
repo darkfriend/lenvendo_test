@@ -166,4 +166,16 @@ class controller_user extends controller {
             return false;
         }
     }
+    
+    //разлогинизация
+    public function action_exit(){
+        if($this->destroySession()){
+            $data['result'] = true;
+            $data['result_msg'] = 'Вы успешно вышли.';
+        } else {
+            $data['result'] = false;
+            $data['result_msg'] = 'Выход не удался. Возможно вы не были авторизованны!';
+        }
+        $this->view->render( 'user/exit_view.php', 'template_view.php', $data );
+    }
 }

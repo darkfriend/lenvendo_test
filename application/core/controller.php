@@ -151,7 +151,7 @@ class controller{
     public function destroySession(){
         if(session_id()){
             setcookie(session_name(),session_id(), time()-60*60*24);
-            if(session_unset() && session_destroy()){
+            if(session_unset() || session_destroy()){
                 return true;
             } else {
                 return false;

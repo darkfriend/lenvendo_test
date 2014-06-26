@@ -1,4 +1,4 @@
-<div id="colors_canvas" class="panel panel-primary">
+<!--<div id="colors_canvas" class="panel panel-primary">
     <header class="panel-heading">
         <div class="btn-toolbar">
             <div id="" class="tools btn-group" >
@@ -50,7 +50,7 @@
         </div>
     </header>
     <section class="panel-body">
-<!--        data-imgid='2'-->
+        data-imgid='2'
         <canvas id="colors_sketch" height="300"  data-img='/upload/16.06.2014/239595759_3c3626b24a_b.jpg' style="background: url('/upload/16.06.2014/239595759_3c3626b24a_b.jpg') no-repeat; background-size: cover;"></canvas>
     </section>
     <footer class="panel-footer nav">
@@ -59,5 +59,18 @@
             <a id="canvas_clear" href="#colors_sketch" data-redraw="" class="btn btn-warning">Очистить</a>
         </div>
     </footer>
-</div>
+</div>-->
 <!--<h1>main <?php echo $data; ?> </h1>-->
+<div class="row">
+    <div class="inner cover block-center well well-lg">
+        <p class="lead text-center">Сохранение и редактирование растровой картинки нарисованной в canvas</p>
+        <p class="lead btn-group">
+            <a href="#" class="btn btn-primary btn-lg">Создать рисунок</a>
+            <a href="#" class="btn btn-info btn-lg">Читать мануал</a>
+        </p>
+    </div>
+<!--    <div class="block-center btn-group">
+        <a href="#" class="btn btn-primary btn-lg">Создать рисунок</a>
+        <a href="#" class="btn btn-info btn-lg">Читать мануал</a>
+    </div>-->
+</div>

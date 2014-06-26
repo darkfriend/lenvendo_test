@@ -270,6 +270,23 @@ class controller_picture extends controller {
         }
     }
     
+    //картинки авторизованного пользователя
+    public function action_user(){
+        if($this->isAuth()){
+            //инициализация модели картинок
+            $this->initModule('pictures');
+            
+            $data['user_id'] = $this->user['user_id'];
+            $data['login'] = $this->user['login'];
+            $data['resultAll'] = $this->getModel()->get_data(true, array('id_user'=>$data['user_id']));
+            //$this->view->render( 'picture/index_view.php', EX_TEMPLATE, $data );
+        } else {
+            $this->msg  = 'Авторизуйтесь или зарегистрируйтесь!';
+            $result_msg_html = '<a href="/user/auth/">Авторизуйтесь</a> или <a href="/user/reg/">зарегистрируйтесь</a>';
+        }
+        $this->view->render( 'picture/index_view.php', EX_TEMPLATE, $data );
+    }
+    
     protected function picture_merge() {
         echo 'picture_merge';
     }
