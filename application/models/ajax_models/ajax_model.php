@@ -1,8 +1,9 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
 /**
- * Description of ajax_model
+ * Модель для ajax-контроллера.
  *
- * @author Виктор
+ * @author darkfriend
  */
 class ajax_model extends model {
     
@@ -11,7 +12,6 @@ class ajax_model extends model {
     
     public function start_module(){
         $this->getRequest();
-        //if(!$this->dataRequest) return false;
         userExeption::startException(true, 'setErrorException');
         if($this->dataRequest['edit_file']){
             $this->getEditFile($this->dataRequest['edit_file'], controller::getUser());
@@ -21,8 +21,6 @@ class ajax_model extends model {
     
     private function getRequest(){
         $this->dataRequest = $this->getRequestQuery(null, 'POST');
-        //$this->dataRequest = $request
-        //$this->dataRequest = $this->getRequestQuery('data_url', 'POST');
     }
     
     private function getEditFile($idFile, $userID){

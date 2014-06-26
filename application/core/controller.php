@@ -1,4 +1,10 @@
+<?if(!defined("START") || START!==true)die();?>
 <?
+/**
+ * Ядро для всех контроллеров.
+ *
+ * @author darkfriend
+ */
 class controller{
     public $model,
         $view,
@@ -16,21 +22,20 @@ class controller{
         
         $this->user['user_id'] = $this->getUser();
         $this->user['login'] = $this->getLogin();
-        #var_dump($fc);
-        //var_dump($this->params);
     }
     
+    //метод index-а
     function action_index(){
         
     }
     
+    //метод для инициализации моделей
     protected function initModule($moduleName, $dirModel=false){
         $module_path = PATH_ROOT.'/application/models/';
         if($dirModel){
             $module_path .= $dirModel.'/';
         }
         if(is_dir($module_path.$moduleName.'_models')){
-            //echo "test";
             $module_path = $module_path.$moduleName.'_models/'.$moduleName.'_model.php';
         } elseif ( file_exists($module_path.$moduleName.'_model.php') ) {
             $module_path = $module_path.$moduleName.'_model.php';
@@ -44,6 +49,7 @@ class controller{
         $this->setModel( new $classModel );
     }
     
+    //метод для инициализации конроллеров
     protected function initController($controllerName, $dirController=false){
         $controller_path = PATH_ROOT.'/application/controllers/';
         if($dirController){
@@ -64,27 +70,27 @@ class controller{
         $this->setController( new $classController, $controllerName );
     }
     
-    //возвращает объект инициализированной модели
+    //метод возвращает объект инициализированной модели
     public function getModel(){
         return $this->model;
     }
     
-    //записывает объект инициализированной модели
+    //метод устанавливает объект инициализированной модели
     public function setModel($modelObj){
         $this->model = $modelObj;
     }
     
-    //возвращает объект инициализированного контроллера, с ключём как имя контроллера
+    //метод возвращает объект инициализированного контроллера, с ключём как имя контроллера
     public function getController($name){
         return $this->controller[$name];
     }
     
-    //записывает объект инициализированного контроллера, с ключём как имя контроллера
+    //метод запоминает объект инициализированного контроллера, с ключём как имя контроллера
     public function setController($modelObj, $name){
         $this->controller[$name] = $modelObj;
     }
     
-    //возвращает обработанные request данные
+    //метод возвращает обработанные request данные
     public function getRequestQuery($val=null, $method='POST'){
         switch ($method) {
             case 'POST' : $methodArray=$_POST; break;
@@ -97,9 +103,9 @@ class controller{
         }
         return false;
     }
-
+    
+    //метод помагает разделить и очистить данные от порчи
     public function clearanceValues($array){
-        //if($_SERVER['REQUEST_METHOD']=='POST'){
         if(is_array($array)){
             foreach ($array as $key=>$value){
                 if(is_array($value)){
@@ -115,23 +121,26 @@ class controller{
         return $newArray;
     }
     
+    //метод очищает от порчи
     private function clearSpecSym($data){
         if (get_magic_quotes_gpc()) $data = stripslashes($data);
         define('ENT_SUBSTITUTE', ENT_IGNORE);
         $data = htmlspecialchars($data, ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED | ENT_SUBSTITUTE, 'UTF-8');
-        //$data = preg_replace('#\W#', '', $data);
+        //$data = preg_replace('#\W#', '', $data); //жёсткая очистка от порчи
         return $data;
     }
     
+    //возврат идентификатора пользователя
     public function getUser(){
         return $_SESSION['id_user'];
     }
     
+    //возврат логина пользователя
     public function getLogin(){
         return $_SESSION['login'];
     }
 
-        //метод для проверки авторизованности
+    //метод проверяющий авторизованность
     public function isAuth(){
         if( !empty($_SESSION['login']) || !empty($_SESSION['id_user']) ){
             return true;

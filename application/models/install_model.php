@@ -1,32 +1,17 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
 /**
- * Description of install_models
- *
- * @author dark
+ * Модель для install-контроллера.
+ * Используется при установке
+ * 
+ * @author darkfriend
  */
 class install_model extends model{
     
-    private $_tableName = array( 'users', 'user_pictures', 'user_privileges' ),
+    private $_tableName = array( 'users', 'user_pictures', 'user_privileges' ), // список проверяемых таблиц
             $_errorTable = false,
             $_nameCreateTables = array(),
             $_statusMsg = array();
-
-    //private $db;
-    
-//    public function __construct(){
-//        $this->table_check();
-//        //$this->inslallTable();
-//    }
-//    
-//    static function set_data() {
-//        $this->db->query('');
-//        //parent::set_data();
-//    }
-    
-    /*public function __construct() {
-        parent::__construct();
-        //$this->start_module();
-    }*/
     
     public function start_module() {
         userExeption::startException(true, 'setErrorException');
@@ -47,10 +32,6 @@ class install_model extends model{
     
     #проверка целостности таблиц БД
     private function table_check(){
-        //$this->db->query()
-        //var_dump('result_tables');
-        //var_dump(DB_NAME);
-        //$dbName = DB_NAME;
         $result_tables = $this->db->getAll('SHOW TABLES FROM ?n', DB_NAME);
         $result_tables = $this->queryRender($result_tables);
         
@@ -66,10 +47,6 @@ class install_model extends model{
         }
         
         return true;
-        //var_dump(array( 'users', 'user_privileges', 'user_pictures' )==array( 'users', 'user_pictures', 'user_privileges' ));
-        
-        //var_dump($result_tables);
-        //var_dump($this->_tableName);
        
     }
 
@@ -85,7 +62,6 @@ class install_model extends model{
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
             INSERT INTO users (login, pass, data_auth, privilege_id) VALUES ("admin", "21232f297a57a5a743894a0e4a801fc3", "2014-06-22", 1);
         ');
-        //var_dump($result_create);
         return $result_create;
     }
     

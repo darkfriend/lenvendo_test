@@ -1,7 +1,5 @@
+<?if(!defined("START") || START!==true)die();?>
 <div class="row">
-<!--<pre>
-       <?print_r($data['resultAll'][1]);?>
-</pre>-->
     <? for( $i=0, $cnt = count($data['resultAll']); $i<$cnt; $i++ ){ ?>
         <div class="col-sm-6 col-md-4">
             <div class="thumbnail">
@@ -13,5 +11,4 @@
             </div>
         </div>
     <? } ?>
-    <?//=$cnt;  ?>
 </div>

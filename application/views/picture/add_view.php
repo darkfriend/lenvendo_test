@@ -1,4 +1,4 @@
-<? var_dump($data); ?>
+<?if(!defined("START") || START!==true)die();?>
 
 <? if( !$data['result'] && $data['user_id'] && !$data['error'] ){ ?>
 <? if($data['edit']){ ?>

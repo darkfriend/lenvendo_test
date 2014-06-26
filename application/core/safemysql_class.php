@@ -1,3 +1,4 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
 /**
  * @author col.shrapnel@gmail.com

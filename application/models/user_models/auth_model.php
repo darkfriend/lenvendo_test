@@ -1,8 +1,10 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
 /**
- * Description of auth_model
- *
- * @author dark
+ * Модель для пользовательского-контроллера.
+ * Используется при авторизации
+ * 
+ * @author darkfriend
  */
 class auth_model extends model{
     
@@ -13,7 +15,6 @@ class auth_model extends model{
     }
     public function get_data($login, $pass){
         $result = $this->db->getOne('SELECT ID FROM users WHERE login=?s AND pass=?s', $login, $pass);
-        //var_dump('$result='.$result);
         if($result){
             return array('check_auth'=>true,'msg'=>'Пользователь с такими данными не найден!','id_user'=>$result);
         } else {

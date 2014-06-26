@@ -1,11 +1,11 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
-
-/*class reg_model extends model{
-    public function checkAuthData($login, $pass){
-        if( !$login || !$pass ) return false;
-        
-    }
-}*/
+/**
+ * Модель для пользовательского-контроллера.
+ * Используется при регистрации
+ * 
+ * @author darkfriend
+ */
 class reg_model extends model{
     
     //метод регистрации пользователя
@@ -19,9 +19,9 @@ class reg_model extends model{
         
     }
     
+    //создание строки в бд
     public function set_data($login, $pass){
-        $result = $this->db->query("INSERT INTO users (login,pass,data_auth,privilege_id) VALUES ( ?s, ?s, ?s, ?i )", $login, $pass, date('d.m.Y H:i:s'), USER_GROUP_DEFAULT); //getOne('SELECT ID FROM users WHERE login=?s AND pass=?s', $login, $pass);
-        var_dump('$result='.$result);
+        $result = $this->db->query("INSERT INTO users (login,pass,data_auth,privilege_id) VALUES ( ?s, ?s, ?s, ?i )", $login, $pass, date('d.m.Y H:i:s'), USER_GROUP_DEFAULT);
         if($result){
             return array('check_auth'=>true,'msg'=>'Пользователь с такими данными не найден!','id_user'=>$result);
         } else {
@@ -29,6 +29,7 @@ class reg_model extends model{
         }
     }
     
+    //проверка пользователя на наличие
     protected function check_login($login){
         return $this->db->getOne('SELECT ID FROM users WHERE login=?s', $login);
     }

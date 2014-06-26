@@ -1,8 +1,9 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
 /**
- * Description of main
+ * Главный контроллер.
  *
- * @author dark
+ * @author darkfriend
  */
 class controller_main extends controller {
     public $paramControllerLength = 1; //возможное кол-во принимаемых параметров (GET)
@@ -12,7 +13,6 @@ class controller_main extends controller {
         $dataArray['params'] = $this->params;
         $dataArray['user_id'] = $this->user['user_id'];
         $dataArray['login'] = $this->user['login'];
-        //echo $name;
         $this->view->render('main_view.php', EX_TEMPLATE , $dataArray);
     }
     

@@ -1,3 +1,4 @@
+<?if(!defined("START") || START!==true)die();?>
 readme
 
 Что было написано:

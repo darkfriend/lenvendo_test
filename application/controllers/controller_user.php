@@ -1,5 +1,10 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
-
+/**
+ * Контроллер для работы с пользователями.
+ *
+ * @author darkfriend
+ */
 class controller_user extends controller {
     public $paramControllerLength = 0, //возможное кол-во принимаемых параметров (GET)
             $msg=array(); //массив сообщений
@@ -10,50 +15,18 @@ class controller_user extends controller {
         if(!$this->getSession()){//запуск сессии
             throw new Exception('No session!');
         }
-        //$this->initModule('auth');
     }
     public function action_index(){
         userExeption::startException();
         throw new Exception('Not found! Is user/index');
-        /*if($this->getSession()){
-            if( !empty($_SESSION['login']) && !empty($_SESSION['id_user']) ){
-                $this->login = $_SESSION['login'];
-                $this->id_user = $_SESSION['id_user'];
-            }
-            
-        }*/
-        //$arData['REQUEST'] = $this->getModel()->start_module();
     }
     
-    //действие авторизации пользователя
+    //действие на авторизацию пользователя
     public function action_auth(){
-        /*//инициализация модели авторизации
-        $this->initModule('auth');
-        //возвращаю весь $_POST
-        $reqestHeader = $this->getRequestQuery();
-        if (!$reqestHeader) throw new Exception('No header data!');
-        //проверяю логин и пароль
-        $resultCheck = $this->getModel()->checkAuthData( $reqestHeader['login'],md5($reqestHeader['pass']) );
-        if($resultCheck['check_auth']){
-            $this->login = $_SESSION['login'] = $reqestHeader['login'];
-            $this->id_user = $_SESSION['id_user'] = $resultCheck['id_user'];
-            
-        } else {
-            throw new Exception('Пользователь с такими данными не найден!');
-            
-        }*/
-//        if( !empty($_SESSION['login']) || !empty($_SESSION['id_user']) ){
-//            $this->msg = '';
-//        }
-        /*if( !empty($_SESSION['login']) || !empty($_SESSION['id_user']) ){
-            $this->view->render( 'user/auth_view.php', 'template_view.php', $data );
-            return true;
-        }*/
         if ($this->authUser()) {
             $data['result'] = 'Вы успешно авторизованны!';
             $data['isAuth'] = $this->isAuth;
-        } elseif($this->isAuth) { //!empty($this->msg)
-            //$data = 'Авторизация не удалась. Пользователь с такими данными не найден!';
+        } elseif($this->isAuth) {
             $data['error'] = true;
             $data['isAuth'] = true;
             $data['result'] = 'Авторизация не удалась.';
@@ -62,8 +35,6 @@ class controller_user extends controller {
             $data['error'] = true;
             $data['result'] = 'Авторизация не удалась.';
             $data['result_msg'] = $this->msg;
-            //$data['result'] = 'Авторизация не удалась.';
-            //$data['result_msg'] = $this->msg;
         } else {
             $data = '';
         }
@@ -100,7 +71,6 @@ class controller_user extends controller {
             $this->isAuth = true;
             return true;
         } else {
-            //throw new Exception('Пользователь с такими данными не найден!');
             $this->msg = $resultCheck['msg'];
             return false;
         }
@@ -114,7 +84,6 @@ class controller_user extends controller {
                 $data['isAuth'] = true;
                 $data['reg_success'] = true;
             } elseif($this->isAuth) {
-                //$data = 'Авторизация не удалась. Пользователь с такими данными не найден!';
                 $data['error'] = true;
                 $data['isAuth'] = true;
                 $data['result'] = 'Регистрация не удалась.';
@@ -161,7 +130,6 @@ class controller_user extends controller {
             $this->user['user_id'] = $_SESSION['id_user'] = $resultRegister['id_user'];
             return true;
         } else {
-            //throw new Exception('Пользователь с такими данными не найден!');
             $this->msg = $resultRegister['msg'];
             return false;
         }

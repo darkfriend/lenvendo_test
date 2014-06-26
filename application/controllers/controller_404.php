@@ -1,9 +1,9 @@
+<?if(!defined("START") || START!==true) die(); ?>
 <?php
-
 /**
- * Description of controller_404
+ * Контроллер для работы с ошибкой 404.
  *
- * @author dark
+ * @author darkfriend
  */
 class controller_404 extends controller {
     function action_index(){

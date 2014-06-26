@@ -1,9 +1,9 @@
+<?if(!defined("START") || START!==true)die();?>
 <?php
-
 /**
- * Description of controller_ajax
+ * Контроллер для работы с ajax.
  *
- * @author Виктор
+ * @author darkfriend
  */
 class controller_ajax extends controller {
     public $paramControllerLength = 0; //возможное кол-во принимаемых параметров (GET)
@@ -24,11 +24,7 @@ class controller_ajax extends controller {
     
     public function action_index(){
         #запускаю модель
-        //$arData['name_img'] = $this->getModel()->start_module();
         $arData['REQUEST'] = $this->getModel()->start_module();
-        var_dump($arData);
-        //exit;
-        //if($arData['REQUEST']['name_img'])
         list($width,$height,$type)= getimagesize($arData['name_img']);
         if( in_array( $type, array(1,2,3)) ){
             $this->typeImg = $this->flag[$type];
@@ -40,13 +36,9 @@ class controller_ajax extends controller {
     
     //метод добавления картинки
     public function action_picture_add() {
-        //var_dump('$arData');
-        //$arData['REQUEST_POST'] = $this->getRequestQuery();
-        //$isAuth = $this->isAuth();
         if($this->isAuth()){
             //инициализация конроллера картинок
             $this->initController('picture');
-            //echo 'action_picture_add';
             //запускаю контроллер картинок. Метод добавления.
             $data = $this->getController('picture')->action_add(true);
         } else {
@@ -90,67 +82,4 @@ class controller_ajax extends controller {
         $data['login'] = $this->user['login'];
         $this->view->render( 'ajax_view.php', 'ajax/ajax_temp.php', $data );
     }
-    
-    private function startRender(){
-        $params = $this->params;
-        $name = $params['name'];
-        //echo $name;
-        $this->view->render('ajax/ajax_view.php', 'ajax/ajax_temp.php' , $name);
-    }
-
-
-    private function getFileNewFile(){
-        
-        $name = md5($this->dataRequest.time());
-        $file = "/$name.png";
-        $this->saveRequestFile($file);
-        if (!file_exists($file)){
-            
-        } else {
-            
-        }
-    }
-    
-    #сохраняет нарисованную картинку
-    /*private function saveRequestFile($data){
-        $image = str_replace(" ", "+", $data);
-        $image = substr($image, strpos($image, ","));
-        //$dirDateMonth = date('m.Y');
-        $path_file = PATH_TO_SAVE_IMG.'/'.date('m.Y').$data;
-        file_put_contents($path_file, base64_decode($image));
-        return $path_file;
-    }*/
-    
-    //возвращаю родительскую картинку
-    private function getParentFile(){
-        $this->parentImgID = filter_input(INPUT_POST, 'imgid', FILTER_SANITIZE_NUMBER_INT);
-        if($this->parentImgID){
-            $this->mergePictures($this->parentImgID);
-        }
-        
-    }
-    
-    private function mergePictures($pict1, $pict2){
-        if($pict1['typeImg']!==$pict2['typeImg']) return false;
-        switch($pict1['typeImg']){
-            case 'jpg' :
-                $src1 = imagecreatefromjpeg($pict1['path']);
-                $src2 = imagecreatefromjpeg($pict2['path']);
-                break;
-            case 'png' :
-                $src1 = imagecreatefrompng($pict1['path']);
-                $src2 = imagecreatefrompng($pict2['path']);
-                break;
-        }
-        if(!$src1 || !$src2) return false;
-        if(imagecopy($src1, $src2)){
-            return $pict1['path'];
-        } else {
-            return false;
-        }
-    }
-    
-//    public function action_ajax(){
-//        include 'ajax/';
-//    }
 }

@@ -1,12 +1,12 @@
 <?if(!defined("START") || START!==true)die();?>
 <?
 /**
- * 
- * Класс простой маршрутизации
+ * Маршрутизатор
  * Изобретение велосипеда
- * @author darkfriend
  * 
+ * @author darkfriend
  */
+
 class Route{
     
     protected $_controller = DEFAULT_CONTROLLER,
@@ -14,8 +14,7 @@ class Route{
             $_params,
             $_paramLength,
             $_model,
-            $is_404,
-            $_body;
+            $is_404;
     static $_instance;
 
     public static function getInstance(){
@@ -105,14 +104,6 @@ class Route{
         return $this->_action;
     }
     
-    function getBody(){
-        return $this->_body;
-    }
-    
-    function setBody($newBody){
-        $this->_body = $newBody;
-    }
-    
     public function ErrorPage404(){
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
@@ -129,7 +120,7 @@ class userExeption{
     static function setException($exception){
         error_log($exception->getMessage(), 0);
         Route::ErrorPage404();
-        #echo "<strong>Exception:</strong> " , $exception->getMessage();
+        #echo "<strong>Exception:</strong> " , $exception->getMessage(); //вывод ошибки. Использую для дебага.
     }
     static function setErrorException($exception){
         $_POST['errorExceptionValue'] = $exception->getMessage();

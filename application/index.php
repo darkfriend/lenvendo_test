@@ -5,8 +5,8 @@ include 'core/view.php';
 include 'core/controller.php';
 include 'core/route.php';
 include 'config.php';
-#Route::start(); // запускаю маршрутизатор
-#
+ini_set('display_errors',DISPLAY_ERRORS);
+
 #делаю загрузку классов 'на лету'
 function __autoload($class){
     $class=strtolower($class);
@@ -16,4 +16,3 @@ function __autoload($class){
 }
 $router = Route::getInstance();
 $router->start();
-#echo $router->getBody;

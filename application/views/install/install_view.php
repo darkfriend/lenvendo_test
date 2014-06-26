@@ -1,3 +1,4 @@
+<?if(!defined("START") || START!==true)die();?>
 <? $data['check_db']['status'] ?>
 <? if($data['check_db']['status']){ ?>
     <? for($i=0, $cnt = count($data['check_db']['msg']); $i<$cnt; $i++ ){ ?>
@@ -18,8 +19,3 @@
         echo htmlspecialchars($_POST['errorExceptionValue'], ENT_QUOTES | ENT_HTML5 | ENT_DISALLOWED | ENT_SUBSTITUTE, 'UTF-8');
     }
 ?>
-<!--<pre>
-<?
-    print_r($data);
-?>
-</pre>-->

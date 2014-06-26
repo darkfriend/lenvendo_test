@@ -1,3 +1,4 @@
+<?if(!defined("START") || START!==true)die();?>
 <?
 if($data['reg_success']){
 ?>
