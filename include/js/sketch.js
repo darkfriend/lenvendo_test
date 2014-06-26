@@ -72,8 +72,7 @@ var __slice = Array.prototype.slice;
       if (format === "jpg") {
         format = "jpeg";
       }
-      mime = "image/" + format;
-      
+      mime = "image/png";//format;
         var imgid = parseInt($('#colors_sketch').data('imgid'));
         if(imgid){
             urlForAjax = '/ajax/picture_edit/';

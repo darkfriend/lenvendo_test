@@ -247,11 +247,41 @@ class controller_picture extends controller {
             $path_file.=$file;
         }
         
-        if(!file_put_contents($path_file, base64_decode($image))){
-            return false;
+        //канвас отдаёт черную заливку. Пришлось извратиться.
+        if(preg_match('/(jpeg)$/', $path_file)){
+            $pathMd5 = '/tmp/'.md5(time()).'.png';
+            if(file_put_contents($pathMd5, base64_decode($image))){
+                $this->pngTojpg($pathMd5, $path_file);
+                unlink($pathMd5);
+            } else {
+                return false;
+            }
+        } else {
+            if(!file_put_contents($path_file, base64_decode($image))){
+                return false;
+            }
         }
-        
         return $path_file;
+    }
+    
+    //переобразование из png в jpeg
+    public function pngTojpg($originalFile, $outputFile, $quality=80) {
+        $image = imagecreatefrompng($originalFile);
+        //узнаю размеры
+        $w = imagesx($image);
+        $h = imagesy($image);
+        //создаю новый ресурс
+        $white = imagecreatetruecolor($w, $h);
+        //устанавливаю белый цвет
+        $bg = imagecolorallocate($white, 255, 255, 255);
+        //отрисовываю белый цвет
+        imagefill($white, 0, 0, $bg);
+        //сомещаю ресурсы
+        imagecopy($white, $image, 0, 0, 0, 0, $w, $h);
+        imagejpeg($white, $outputFile, $quality);
+        //очищаю
+        imagedestroy($image);
+        imagedestroy($white);
     }
     
     /*
