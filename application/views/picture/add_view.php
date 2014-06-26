@@ -35,6 +35,21 @@
                 <a href="#colors_sketch" data-size="" class="btn btn-default" style="background: #ccc"></a>
             </div>
             <div class="btn-group">
+                <div id="set_canvas_extension" class="btn-group dropdown-toggle">
+                    <a href="#" class="btn pull-left color-white" data-toggle="dropdown">Расширение:</a>
+                    <div class="btn btn-primary pull-left" data-toggle="dropdown">
+                        <span>
+                            <abbr class="abbr">PNG</abbr>
+                            <small class="caret ml5"></small>
+                        </span>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-extension" role="menu">
+                        <li class="active"><a href="#" data-value="png">PNG</a></li>
+                        <li><a href="#" data-value="jpg">JPEG</a></li>
+                    </ul>
+                </div>
+            </div>
+<!--            <div class="btn-group">
                 <div id="set_canvas_width" class="btn-group dropdown-toggle">
                     <a href="#" class="btn pull-left color-white" data-toggle="dropdown">Ширина:</a>
                     <div type="button" class="btn btn-primary pull-left" data-toggle="dropdown">
@@ -63,7 +78,7 @@
                         <li><a href="#" data-value="500px">500px</a></li>
                     </ul>
                 </div>
-            </div>
+            </div>-->
         </div>
     </header>
     <section class="panel-body">
@@ -74,7 +89,7 @@
             <a href="/picture/" data-redraw="" class="btn btn-toolbar">&DoubleLeftArrow; Назад</a>
         </div>
         <div class="tools2 pull-right">
-            <a href="#colors_sketch" data-download="png" class="btn bg-primary">Сохранить</a>
+            <a id="sbmt_camvas" href="#colors_sketch" data-download="png" class="btn bg-primary">Сохранить</a>
             <a id="canvas_clear" href="#colors_sketch" data-redraw="" class="btn btn-warning">Очистить</a>
             <a id="canvas_delete" href="#colors_sketch" data-redraw="" class="btn btn-danger">Удалить</a>
         </div>

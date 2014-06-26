@@ -12,6 +12,15 @@ $(function() {
             removeImageCanvas(urlForAjax,dataAjax,imgid);
             return false;
         });
+        $('#set_canvas_extension .dropdown-menu li').click(function(){
+            $(this).addClass('active').siblings().not($(this)).removeClass('active');
+            var extension = $(this).find('a').data('value');
+            var extensionLabel = $(this).find('a').text();
+            $('#sbmt_camvas').attr('data-download',extension);
+            $('#set_canvas_extension abbr').text(extensionLabel);
+            $('.dropdown-menu-extension').dropdown('toggle');
+            return false;
+        });
     }
 });
 function initCanvas(){
