@@ -1,4 +1,4 @@
-# lenvendo_test  README #
+# test for lenvendo  README #
 =============
 
 ###Что было написано:###
@@ -30,7 +30,7 @@
 
 **Для работы с БД используется класс SafeMySQL. Находится в /application/core/safemysql_class.php**
 
-#Инсталлер:#
+###Инсталлер:###
 - Контроллер находится тут: /application/controllers/controller_install.php
 - Модель /application/models/install_model.php
 - Вывод тут: /application/views/install/install_view.php
